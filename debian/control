@@ -8,7 +8,7 @@ Standards-Version: 4.5.1
 Package: virtualbmc
 Architecture: all
 Section: utils
-Depends: python3, python3-libvirt, python3-pyghmi, python3-cliff
+Depends: python3, python3-libvirt, python3-pyghmi, python3-cliff, python3-zmq
 Description: Simulates a Baseboard Management Controller (BMC)
  by exposing IPMI responder to the network and talking to libvirt at
  the host vBMC is running at to manipulate virtual machines which pretend
