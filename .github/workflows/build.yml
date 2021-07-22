@@ -1,0 +1,23 @@
+name: Build
+on: [push]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          docker build -t virtualbmc .
+          docker run \
+            --rm \
+            --volume "$PWD:/host" \
+            --entrypoint bash \
+            virtualbmc \
+            -c 'cp /packages/*.deb /host'
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: |
+            *.deb
