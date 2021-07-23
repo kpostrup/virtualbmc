@@ -1,5 +1,8 @@
 name: Build
 on: [push]
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 jobs:
   build:
     name: Build
@@ -21,3 +24,16 @@ jobs:
           name: Artifacts
           path: |
             *.deb
+      - name: Login to the ${{ env.REGISTRY }} registry
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push image to the ${{ env.REGISTRY }} registry
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${GITHUB_REF#refs/*/}"
+          docker tag virtualbmc "$IMAGE"
+          docker push "$IMAGE"
